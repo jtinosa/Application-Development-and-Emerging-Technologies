@@ -1,3 +1,2 @@
 # Application-Development-and-Emerging-Technologies
-- [Reference]()
-- [Lecture1]()
+- [Lecture1](Lesson1.md)

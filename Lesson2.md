@@ -1,6 +1,6 @@
 # Requirements Analysis and Modeling
 
-## 1. Introduction
+## Introduction
 
 **Requirements Determination** is a crucial part of systems development, converting high-level user requirements into a detailed **requirements definition report**.
 
@@ -10,7 +10,7 @@
 3. Design
 4. Implementation
 
-## 2. Types of Requirements
+## Types of Requirements
 
 ### Functional Requirements
 - Directly related to system processes or data
@@ -26,7 +26,7 @@
 4. **Cultural and political requirements**
    - Consider cultural factors, legal requirements
 
-## 3. Requirements Definition Report
+## Requirements Definition Report
 
 - Also known as requirements specification document
 - Lists functional and non-functional requirements
@@ -42,7 +42,7 @@
 5. Verification/Document Approvals
 6. Appendixes
 
-## 4. Requirements-Gathering Techniques
+## Requirements-Gathering Techniques
 
 ### 1. Interviews
 - Most common technique
@@ -78,7 +78,7 @@
 - Watching processes being performed
 - Good for validating information from other sources
 
-## 5. Requirements Analysis
+## Requirements Analysis
 
 ### Characteristics of Good Requirements:
 1. Necessary
@@ -94,7 +94,7 @@
 - Tool to determine if each requirement is actually needed
 - Analyze each requirement against a set of questions
 
-## 6. Modeling with Unified Modeling Language (UML)
+## Modeling with Unified Modeling Language (UML)
 
 ### Use-Case Diagrams
 - Demonstrate functional requirements from user perspective
@@ -105,7 +105,7 @@
 3. Subject boundaries
 4. Relationships
 
-## 7. Creating Use-Case Diagrams
+## Creating Use-Case Diagrams
 
 ### Steps to Identify Major Use-Cases:
 1. Review requirements definition

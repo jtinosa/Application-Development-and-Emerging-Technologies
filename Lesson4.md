@@ -94,9 +94,115 @@ public class SingletonPatternExample {
   - **Potential for misuse**: Singleton can be overused and lead to a tightly coupled system, especially when developers use it as a global variable.
   - **Thread safety concerns**: In multithreaded scenarios, careful handling (e.g., using synchronization or double-checked locking) is required to ensure that only one instance is created.
 
-2. **Factory Method Pattern**:
-   - Defines an interface for creating objects, but lets subclasses decide which class to instantiate.
-   - **Example**: Logistics app creating trucks or ships based on the need.
+### **Factory Method Design Pattern**
+
+#### **Definition:**
+The Factory Method Pattern defines an interface for creating an object, but lets subclasses alter the type of objects that will be created. It provides a way to delegate the instantiation logic to child classes, promoting loose coupling.
+
+#### **Problem:**
+Use the Factory Method Pattern when:
+- You want to decouple the client code from the object creation logic, allowing the class to defer instantiation to subclasses.
+- You need flexibility in creating different types of objects, but the exact type of object isn't known until runtime.
+- You want to follow the "open-closed principle" where adding new products doesn’t require modifying existing code.
+
+#### **Solution:**
+The Factory Method Pattern relies on:
+1. **Creator (Factory)**: Defines the factory method, which returns an instance of a product.
+2. **Product**: Defines the interface of the object to be created.
+3. **ConcreteCreator**: Implements the factory method to return an instance of the concrete product.
+
+**Class Structure**:
+- **Creator**: Declares the factory method.
+- **ConcreteCreator**: Overrides the factory method to create a concrete product.
+- **Product**: Interface or abstract class defining the product.
+- **ConcreteProduct**: Concrete implementations of the product.
+
+**UML Structure**:
+```
++-------------------+               +-------------------+
+|   Creator         |               |   Product         |
++-------------------+               +-------------------+
+| +factoryMethod()  |               |                   |
++-------------------+               +-------------------+
+        ^                                   ^
+        |                                   |
++-------------------+               +-------------------+
+| ConcreteCreator   |               | ConcreteProduct   |
++-------------------+               +-------------------+
+| +factoryMethod()  |               |                   |
++-------------------+               +-------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Product Interface
+interface Product {
+    void use();
+}
+
+// ConcreteProductA Class
+class ConcreteProductA implements Product {
+    public void use() {
+        System.out.println("Using Product A");
+    }
+}
+
+// ConcreteProductB Class
+class ConcreteProductB implements Product {
+    public void use() {
+        System.out.println("Using Product B");
+    }
+}
+
+// Creator Class (Factory)
+abstract class Creator {
+    public abstract Product factoryMethod();
+
+    public void someOperation() {
+        Product product = factoryMethod();
+        product.use();
+    }
+}
+
+// ConcreteCreatorA Class
+class ConcreteCreatorA extends Creator {
+    public Product factoryMethod() {
+        return new ConcreteProductA();
+    }
+}
+
+// ConcreteCreatorB Class
+class ConcreteCreatorB extends Creator {
+    public Product factoryMethod() {
+        return new ConcreteProductB();
+    }
+}
+
+// Usage
+public class FactoryMethodExample {
+    public static void main(String[] args) {
+        Creator creatorA = new ConcreteCreatorA();
+        creatorA.someOperation();  // Outputs: Using Product A
+
+        Creator creatorB = new ConcreteCreatorB();
+        creatorB.someOperation();  // Outputs: Using Product B
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Loose coupling**: Clients don’t need to know the specific class of objects they use, only the interface or abstract class.
+  - **Single Responsibility**: The factory method isolates the object creation code, allowing it to be easily changed without impacting the rest of the code.
+  - **Open-Closed Principle**: It’s easy to add new types of products without modifying existing code by introducing new concrete creators.
+
+- **Negative**:
+  - **Increased complexity**: For simple applications, using a factory method might add unnecessary complexity as you have to introduce additional classes and interfaces.
+  - **Multiple subclasses**: Overuse can lead to a proliferation of subclasses and make the code harder to maintain.
+
 
 3. **Prototype Pattern**:
    - Allows copying an object without depending on its class.

@@ -448,9 +448,136 @@ public class AbstractFactoryExample {
   - **Potential for code bloat**: If many product families are required, it may lead to a proliferation of classes and interfaces.
 
 
-5. **Builder Pattern**:
-   - Constructs complex objects step by step.
-   - **Example**: Building a house with different parts like walls, doors, windows.
+### **Builder Design Pattern**
+
+#### **Definition:**
+The Builder Pattern is a creational design pattern that allows for the step-by-step construction of complex objects. It separates the construction of a complex object from its representation, enabling the same construction process to create different representations. This pattern is particularly useful when an object needs to be created with many optional parameters or when the object creation process involves multiple steps.
+
+#### **Problem:**
+Use the Builder Pattern when:
+- You want to create an object that requires many parameters, especially when some of those parameters are optional.
+- The construction process of the object is complex and involves multiple steps.
+- You want to avoid a telescoping constructor (a constructor with many parameters) that can lead to confusion and difficulty in maintaining the code.
+
+#### **Solution:**
+The Builder Pattern consists of:
+1. **Builder Interface**: Defines the methods for creating parts of the complex object.
+2. **ConcreteBuilder**: Implements the builder interface and provides specific implementations for constructing the parts of the object.
+3. **Director**: Responsible for managing the construction process, calling the builder methods in a specific order.
+4. **Product**: The complex object that is being constructed.
+
+**Class Structure**:
+- **Builder**: Interface for building parts of the product.
+- **ConcreteBuilder**: Implements the builder interface to create specific product representations.
+- **Director**: Uses a builder instance to construct the product.
+- **Product**: Represents the complex object that is built.
+
+**UML Structure**:
+```
++------------------+
+|      Director    |
++------------------+
+| +construct()     |
++------------------+
+        |
+        v
++------------------+
+|      Builder     |
++------------------+
+| +buildPart()     |
+| +getResult()     |
++------------------+
+        ^
+        |
++------------------+
+|  ConcreteBuilder  |
++------------------+
+| +buildPart()     |
+| +getResult()     |
++------------------+
+        |
+        v
++------------------+
+|      Product     |
++------------------+
+|                  |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Product Class
+class Product {
+    private String partA;
+    private String partB;
+    private String partC;
+
+    // Getters
+    public String getPartA() { return partA; }
+    public String getPartB() { return partB; }
+    public String getPartC() { return partC; }
+
+    // Builder Class
+    public static class Builder {
+        private String partA;
+        private String partB;
+        private String partC;
+
+        public Builder setPartA(String partA) {
+            this.partA = partA;
+            return this;
+        }
+
+        public Builder setPartB(String partB) {
+            this.partB = partB;
+            return this;
+        }
+
+        public Builder setPartC(String partC) {
+            this.partC = partC;
+            return this;
+        }
+
+        public Product build() {
+            Product product = new Product();
+            product.partA = this.partA;
+            product.partB = this.partB;
+            product.partC = this.partC;
+            return product;
+        }
+    }
+}
+
+// Client Code
+public class BuilderPatternExample {
+    public static void main(String[] args) {
+        Product product = new Product.Builder()
+                .setPartA("Part A")
+                .setPartB("Part B")
+                .setPartC("Part C")
+                .build();
+
+        // Displaying product parts
+        System.out.println("Product Parts:");
+        System.out.println("A: " + product.getPartA());
+        System.out.println("B: " + product.getPartB());
+        System.out.println("C: " + product.getPartC());
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Improved readability**: The code becomes easier to read and understand, especially when constructing complex objects.
+  - **Flexibility**: It allows for varying representations of an object without changing the code that uses it.
+  - **Encapsulation**: It encapsulates the construction logic, making it easier to manage.
+
+- **Negative**:
+  - **Increased complexity**: It may introduce additional classes and interfaces, making the system more complex.
+  - **Overhead**: In cases where simple objects are created, using a builder can introduce unnecessary overhead.
 
 ## Structural Design Patterns
 

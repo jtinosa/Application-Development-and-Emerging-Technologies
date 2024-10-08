@@ -817,10 +817,131 @@ public class BridgePatternExample {
   - **Increased complexity**: The added layer of abstraction can make the system more complex and harder to understand.
   - **Difficulties in tracing calls**: The additional layers can lead to more difficulty in tracing calls through the system.
 
+### **Composite Design Pattern**
 
-3. **Composite Pattern**:
-   - Composes objects into tree structures to treat individual and composite objects uniformly.
-   - **Example**: Orders with products and boxes that can contain other boxes or products.
+#### **Definition:**
+The Composite Pattern is a structural design pattern that allows you to compose objects into tree structures to represent part-whole hierarchies. This pattern lets clients treat individual objects and compositions of objects uniformly. It is particularly useful for building complex user interfaces and hierarchical data structures.
+
+#### **Problem:**
+Use the Composite Pattern when:
+- You need to represent a part-whole hierarchy of objects.
+- You want clients to be able to treat individual objects and compositions of objects uniformly.
+- You need to simplify the client code that works with tree structures, enabling it to interact with both individual objects and groups of objects in the same way.
+
+#### **Solution:**
+The Composite Pattern consists of:
+1. **Component**: An interface or abstract class that defines the common interface for both the leaf nodes and the composite nodes.
+2. **Leaf**: Represents the leaf nodes in the tree structure that do not have children.
+3. **Composite**: Represents the composite nodes that can have children and implements the component interface.
+
+**Class Structure**:
+- **Component**: Interface or abstract class for the objects in the composition.
+- **Leaf**: Concrete implementation of the component that represents leaf nodes.
+- **Composite**: Concrete implementation of the component that can hold other components.
+
+**UML Structure**:
+```
++------------------+
+|    Component      |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+|      Leaf        |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+|    Composite     |
++------------------+
+| -children        |
+| +operation()     |
+| +add()           |
+| +remove()        |
+| +getChild()      |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Component Interface
+interface Graphic {
+    void draw();
+}
+
+// Leaf Class
+class Circle implements Graphic {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Circle.");
+    }
+}
+
+// Leaf Class
+class Square implements Graphic {
+    @Override
+    public void draw() {
+        System.out.println("Drawing a Square.");
+    }
+}
+
+// Composite Class
+class CompositeGraphic implements Graphic {
+    private List<Graphic> graphics = new ArrayList<>();
+
+    public void add(Graphic graphic) {
+        graphics.add(graphic);
+    }
+
+    public void remove(Graphic graphic) {
+        graphics.remove(graphic);
+    }
+
+    @Override
+    public void draw() {
+        for (Graphic graphic : graphics) {
+            graphic.draw(); // Delegating drawing to child components
+        }
+    }
+}
+
+// Client Code
+public class CompositePatternExample {
+    public static void main(String[] args) {
+        Graphic circle1 = new Circle();
+        Graphic circle2 = new Circle();
+        Graphic square = new Square();
+
+        CompositeGraphic compositeGraphic = new CompositeGraphic();
+        compositeGraphic.add(circle1);
+        compositeGraphic.add(circle2);
+        compositeGraphic.add(square);
+
+        // Draw the composite graphic
+        compositeGraphic.draw(); // Outputs: Drawing a Circle. Drawing a Circle. Drawing a Square.
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Simplified client code**: Clients can work with complex hierarchies without needing to understand the details of the underlying structure.
+  - **Flexibility**: It is easy to add new components to the system, either as leaf nodes or composite nodes.
+  - **Uniformity**: Clients can treat both leaf nodes and composite nodes uniformly, simplifying the interface.
+
+- **Negative**:
+  - **Increased complexity**: The structure can become complicated, and clients may end up managing a large number of objects.
+  - **Performance issues**: In large tree structures, operations on composites can become inefficient due to the overhead of managing many child components.
 
 4. **Decorator Pattern**:
    - Adds new functionality to an object by wrapping it in a class that implements the same interface.

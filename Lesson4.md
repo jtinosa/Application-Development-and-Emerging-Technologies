@@ -1712,6 +1712,126 @@ public class ObserverPatternExample {
   - **Complexity**: The more observers you have, the more complex the notification mechanism can become, making it harder to debug.
   - **Performance Overhead**: In scenarios with many observers, frequent state changes can lead to performance issues due to the overhead of notifying all observers.
 
-3. **Strategy Pattern**:
-   - Defines a family of algorithms and allows them to be interchangeable.
-   - **Example**: Different algorithms for calculating routes in a navigation app.
+### **Strategy Design Pattern**
+
+#### **Definition:**
+The Strategy Pattern is a behavioral design pattern that enables selecting an algorithm's behavior at runtime. It defines a family of algorithms, encapsulates each algorithm, and makes them interchangeable. This pattern allows the algorithm to vary independently from clients that use it, promoting flexibility and reusability.
+
+#### **Problem:**
+Use the Strategy Pattern when:
+- You have multiple algorithms for a specific task and want to choose one dynamically at runtime.
+- You want to avoid a long conditional statement or complex code branching to select which algorithm to use.
+- You want to adhere to the Open/Closed Principle, allowing you to introduce new algorithms without modifying existing code.
+
+#### **Solution:**
+The Strategy Pattern consists of:
+1. **Context**: A class that uses a Strategy object to execute an algorithm.
+2. **Strategy**: An interface that defines a common method for all concrete strategies.
+3. **ConcreteStrategy**: Classes that implement the Strategy interface, providing specific algorithm implementations.
+
+**Class Structure**:
+- **Context**: Holds a reference to a Strategy object.
+- **Strategy**: Interface for the strategy.
+- **ConcreteStrategy**: Implements the Strategy interface.
+
+**UML Structure**:
+```
++------------------+
+|     Context      |
++------------------+
+| -strategy        |
+| +setStrategy()   |
+| +executeStrategy()|
++------------------+
+        ^
+        |
++------------------+
+|     Strategy     |
++------------------+
+| +execute()       |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteStrategyA |
++------------------+
+| +execute()       |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteStrategyB |
++------------------+
+| +execute()       |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Strategy Interface
+interface Strategy {
+    void execute();
+}
+
+// Concrete Strategy A
+class ConcreteStrategyA implements Strategy {
+    @Override
+    public void execute() {
+        System.out.println("Executing Strategy A");
+    }
+}
+
+// Concrete Strategy B
+class ConcreteStrategyB implements Strategy {
+    @Override
+    public void execute() {
+        System.out.println("Executing Strategy B");
+    }
+}
+
+// Context Class
+class Context {
+    private Strategy strategy;
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void executeStrategy() {
+        if (strategy != null) {
+            strategy.execute();
+        } else {
+            System.out.println("No strategy set.");
+        }
+    }
+}
+
+// Client Code
+public class StrategyPatternExample {
+    public static void main(String[] args) {
+        Context context = new Context();
+
+        // Set and execute Strategy A
+        context.setStrategy(new ConcreteStrategyA());
+        context.executeStrategy();
+
+        // Set and execute Strategy B
+        context.setStrategy(new ConcreteStrategyB());
+        context.executeStrategy();
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Flexibility**: Allows the algorithm to be selected at runtime, providing flexibility in choosing different behaviors.
+  - **Separation of Concerns**: Encapsulates algorithms within their own classes, promoting better organization and maintainability.
+  - **Adheres to Open/Closed Principle**: New strategies can be added without modifying existing code.
+
+- **Negative**:
+  - **Increased Number of Classes**: Each strategy requires a separate class, which can lead to an increased number of classes in the system.
+  - **Client Awareness**: Clients must be aware of different strategies and their contexts to utilize them effectively, which can complicate usage.
+  - **Performance Overhead**: The additional layer of abstraction may introduce slight performance overhead due to delegation.

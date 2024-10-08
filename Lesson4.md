@@ -943,9 +943,152 @@ public class CompositePatternExample {
   - **Increased complexity**: The structure can become complicated, and clients may end up managing a large number of objects.
   - **Performance issues**: In large tree structures, operations on composites can become inefficient due to the overhead of managing many child components.
 
-4. **Decorator Pattern**:
-   - Adds new functionality to an object by wrapping it in a class that implements the same interface.
-   - **Example**: Adding SMS and email notifications dynamically.
+### **Decorator Design Pattern**
+
+#### **Definition:**
+The Decorator Pattern is a structural design pattern that allows behavior to be added to individual objects, either statically or dynamically, without affecting the behavior of other objects from the same class. This pattern is useful for adhering to the Single Responsibility Principle by allowing functionality to be divided among classes with unique concerns.
+
+#### **Problem:**
+Use the Decorator Pattern when:
+- You want to add responsibilities to individual objects dynamically and transparently, without affecting other objects.
+- You need to extend the functionality of classes in a flexible and reusable way.
+- You want to avoid a large number of subclasses for every possible combination of behaviors.
+
+#### **Solution:**
+The Decorator Pattern consists of:
+1. **Component**: An interface or abstract class defining the operations that can be decorated.
+2. **ConcreteComponent**: The original object that can be decorated.
+3. **Decorator**: An abstract class that implements the component interface and holds a reference to a component. It can add behavior before or after delegating calls to the component.
+4. **ConcreteDecorator**: A class that extends the decorator and adds specific functionality.
+
+**Class Structure**:
+- **Component**: Interface for the objects that can have responsibilities added to them.
+- **ConcreteComponent**: The object being decorated.
+- **Decorator**: Abstract class implementing the component interface and containing a reference to a component.
+- **ConcreteDecorator**: Extends the decorator to add additional behavior.
+
+**UML Structure**:
+```
++------------------+
+|    Component      |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteComponent |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+|    Decorator     |
++------------------+
+| -component       |
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteDecorator |
++------------------+
+| +operation()     |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Component Interface
+interface Coffee {
+    String getDescription();
+    double cost();
+}
+
+// ConcreteComponent Class
+class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Simple coffee";
+    }
+
+    @Override
+    public double cost() {
+        return 5.00;
+    }
+}
+
+// Decorator Class
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee coffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.coffee = coffee;
+    }
+}
+
+// ConcreteDecorator Class
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", milk";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 1.00; // Adds cost of milk
+    }
+}
+
+// ConcreteDecorator Class
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", sugar";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 0.50; // Adds cost of sugar
+    }
+}
+
+// Client Code
+public class DecoratorPatternExample {
+    public static void main(String[] args) {
+        Coffee coffee = new SimpleCoffee();
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+
+        coffee = new MilkDecorator(coffee);
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+
+        coffee = new SugarDecorator(coffee);
+        System.out.println(coffee.getDescription() + " $" + coffee.cost());
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Flexibility**: You can mix and match decorators to create different combinations of behavior.
+  - **Single Responsibility Principle**: Each decorator can focus on a specific behavior, keeping the code modular and maintainable.
+  - **Open/Closed Principle**: The pattern allows new functionality to be added without modifying existing code.
+
+- **Negative**:
+  - **Complexity**: The system can become complicated with many decorators, making it harder to understand and maintain.
+  - **Performance Overhead**: Each decorator adds a layer of indirection, which can impact performance, especially if used extensively.
 
 5. **Facade Pattern**:
    - Simplifies interactions with a complex subsystem by providing a unified interface.

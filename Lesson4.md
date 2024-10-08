@@ -1090,9 +1090,95 @@ public class DecoratorPatternExample {
   - **Complexity**: The system can become complicated with many decorators, making it harder to understand and maintain.
   - **Performance Overhead**: Each decorator adds a layer of indirection, which can impact performance, especially if used extensively.
 
-5. **Facade Pattern**:
-   - Simplifies interactions with a complex subsystem by providing a unified interface.
-   - **Example**: A single interface for interacting with a complex library.
+### **Facade Design Pattern**
+
+#### **Definition:**
+The Facade Pattern is a structural design pattern that provides a simplified interface to a complex subsystem or a set of interfaces. It defines a higher-level interface that makes the subsystem easier to use, helping to reduce dependencies between the client and the subsystem.
+
+#### **Problem:**
+Use the Facade Pattern when:
+- You want to provide a simple interface to a complex subsystem.
+- You want to hide the complexity of the subsystem from the client code.
+- You need to decouple the client code from the subsystem, reducing the number of classes that the client needs to interact with.
+
+#### **Solution:**
+The Facade Pattern consists of:
+1. **Facade**: A class that provides a simplified interface to a complex subsystem.
+2. **Subsystem Classes**: The classes that are part of the complex subsystem, which may have multiple interfaces.
+
+**Class Structure**:
+- **Facade**: The interface for the client to interact with.
+- **Subsystem Classes**: Individual classes that implement the complex functionality.
+
+**UML Structure**:
+```
++------------------+
+|      Facade      |
++------------------+
+| +operation()     |
++------------------+
+        |
+        |
++------------------+        +------------------+
+|  SubsystemClass1 |        |  SubsystemClass2 |
++------------------+        +------------------+
+| +operation1()    |        | +operation2()    |
++------------------+        +------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Subsystem Class 1
+class SubsystemA {
+    public void operationA() {
+        System.out.println("Subsystem A: Operation A");
+    }
+}
+
+// Subsystem Class 2
+class SubsystemB {
+    public void operationB() {
+        System.out.println("Subsystem B: Operation B");
+    }
+}
+
+// Facade Class
+class Facade {
+    private SubsystemA subsystemA;
+    private SubsystemB subsystemB;
+
+    public Facade() {
+        this.subsystemA = new SubsystemA();
+        this.subsystemB = new SubsystemB();
+    }
+
+    public void simpleOperation() {
+        subsystemA.operationA();
+        subsystemB.operationB();
+    }
+}
+
+// Client Code
+public class FacadePatternExample {
+    public static void main(String[] args) {
+        Facade facade = new Facade();
+        facade.simpleOperation();
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Simplified Interface**: Provides a simplified interface for the client, making it easier to interact with the subsystem.
+  - **Reduced Dependencies**: Clients are less dependent on the complex subsystem, leading to a more maintainable codebase.
+  - **Encapsulation**: Hides the complexity of the subsystem, promoting better organization and separation of concerns.
+
+- **Negative**:
+  - **Potential for Over-Simplification**: The facade might become too simplistic, potentially hiding useful functionality in the subsystem that clients may need.
+  - **Single Point of Failure**: If the facade class changes or fails, it can impact all clients that rely on it, potentially leading to a lack of flexibility.
 
 6. **Flyweight Pattern**:
    - Reduces memory usage by sharing common data between objects.

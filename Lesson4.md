@@ -1298,10 +1298,126 @@ public class FlyweightPatternExample {
   - **Complexity**: Increases system complexity, as it requires careful management of shared and non-shared states.
   - **Difficulty in Maintenance**: The shared state can make it more challenging to understand the behavior of individual objects, especially if there are many variations of the shared state.
 
+### **Proxy Design Pattern**
 
-7. **Proxy Pattern**:
-   - Provides a placeholder for another object to control access to it.
-   - **Example**: Loading a large object only when needed.
+#### **Definition:**
+The Proxy Pattern is a structural design pattern that provides a surrogate or placeholder for another object to control access to it. This pattern allows you to create a proxy object that can represent another object, enabling functionalities such as lazy initialization, access control, logging, and more.
+
+#### **Problem:**
+Use the Proxy Pattern when:
+- You need to control access to an object, such as restricting access based on certain criteria.
+- You want to add additional behavior (like logging or caching) when accessing an object.
+- You need to implement lazy initialization for a resource-heavy object, deferring its creation until it's actually needed.
+
+#### **Solution:**
+The Proxy Pattern consists of:
+1. **Subject**: An interface or abstract class defining the operations that can be performed on the real object.
+2. **RealSubject**: The actual object that the proxy represents and controls access to.
+3. **Proxy**: A class that implements the Subject interface and contains a reference to the RealSubject. The proxy delegates requests to the real object and can add additional behavior.
+
+**Class Structure**:
+- **Subject**: The interface for the RealSubject and Proxy.
+- **RealSubject**: The actual implementation of the Subject interface.
+- **Proxy**: Implements the Subject interface and controls access to the RealSubject.
+
+**UML Structure**:
+```
++------------------+
+|     Subject      |
++------------------+
+| +request()       |
++------------------+
+        ^
+        |
++------------------+
+|  RealSubject     |
++------------------+
+| +request()       |
++------------------+
+        ^
+        |
++------------------+
+|      Proxy       |
++------------------+
+| -realSubject     |
+| +request()       |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Subject Interface
+interface Image {
+    void display();
+}
+
+// RealSubject Class
+class RealImage implements Image {
+    private String filename;
+
+    public RealImage(String filename) {
+        this.filename = filename;
+        loadImageFromDisk(); // Simulate heavy loading
+    }
+
+    private void loadImageFromDisk() {
+        System.out.println("Loading " + filename);
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Displaying " + filename);
+    }
+}
+
+// Proxy Class
+class ProxyImage implements Image {
+    private RealImage realImage;
+    private String filename;
+
+    public ProxyImage(String filename) {
+        this.filename = filename;
+    }
+
+    @Override
+    public void display() {
+        if (realImage == null) {
+            realImage = new RealImage(filename); // Lazy initialization
+        }
+        realImage.display();
+    }
+}
+
+// Client Code
+public class ProxyPatternExample {
+    public static void main(String[] args) {
+        Image image1 = new ProxyImage("image1.jpg");
+        Image image2 = new ProxyImage("image2.jpg");
+
+        // The image is loaded and displayed
+        image1.display();
+        
+        // The image is displayed without reloading
+        image1.display();
+        
+        // The image is loaded and displayed
+        image2.display();
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Access Control**: The proxy can provide control over access to the real object, allowing for security and authorization checks.
+  - **Lazy Initialization**: It can delay the creation of the real object until it is actually needed, saving resources.
+  - **Additional Functionality**: You can add extra features such as logging, caching, or monitoring without modifying the real object.
+
+- **Negative**:
+  - **Complexity**: Adds additional layers of abstraction, which can complicate the design and make it harder to understand.
+  - **Performance Overhead**: Depending on the proxy's implementation, it may introduce performance overhead due to additional indirection.
 
 ## Behavioral Design Patterns
 

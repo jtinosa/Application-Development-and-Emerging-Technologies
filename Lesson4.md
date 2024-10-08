@@ -297,9 +297,156 @@ public class PrototypePatternExample {
   - **Inconsistency**: If the prototype isn't properly designed, it can lead to inconsistencies between the prototype and its clones, especially if they share mutable states.
   - **Performance overhead**: Cloning large objects can still incur performance costs, particularly if they contain significant amounts of data.
 
-4. **Abstract Factory Pattern**:
-   - Produces families of related objects without specifying concrete classes.
-   - **Example**: Creating modern or Victorian furniture sets.
+### **Abstract Factory Design Pattern**
+
+#### **Definition:**
+The Abstract Factory Pattern is a creational design pattern that provides an interface for creating families of related or dependent objects without specifying their concrete classes. This pattern is used to encapsulate a group of individual factories that have a common theme, allowing clients to create objects in a way that is independent of their specific classes.
+
+#### **Problem:**
+Use the Abstract Factory Pattern when:
+- You want to create a system that is independent of how its objects are created, composed, and represented.
+- You need to ensure that products from a specific family are used together (e.g., GUI components that should match in style).
+- You want to provide a client with a way to configure an object without specifying the concrete classes used.
+
+#### **Solution:**
+The Abstract Factory Pattern consists of:
+1. **AbstractFactory**: Declares the creation methods for each type of product.
+2. **ConcreteFactory**: Implements the creation methods to produce specific products.
+3. **AbstractProduct**: Defines the interface for a type of product.
+4. **ConcreteProduct**: Implements the product interface.
+
+**Class Structure**:
+- **AbstractFactory**: Declares creation methods for various abstract products.
+- **ConcreteFactory**: Implements the creation methods for specific products.
+- **AbstractProduct**: Interface for products created by the factories.
+- **ConcreteProduct**: Implementations of the abstract products.
+
+**UML Structure**:
+```
++-------------------+          +-------------------+
+|   AbstractFactory  |<------->|   AbstractProduct  |
++-------------------+          +-------------------+
+| +createProductA() |          |                   |
+| +createProductB() |          +-------------------+
++-------------------+                   ^
+        ^                               |
+        |                               |
++-------------------+          +-------------------+
+| ConcreteFactoryA  |          | ConcreteProductA   |
++-------------------+          +-------------------+
+| +createProductA() |          |                   |
+| +createProductB() |          +-------------------+
++-------------------+                   ^
+        ^                               |
+        |                               |
++-------------------+          +-------------------+
+| ConcreteFactoryB  |          | ConcreteProductB   |
++-------------------+          +-------------------+
+| +createProductA() |          |                   |
+| +createProductB() |          +-------------------+
++-------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// AbstractProductA
+interface ProductA {
+    void use();
+}
+
+// AbstractProductB
+interface ProductB {
+    void use();
+}
+
+// ConcreteProductA1
+class ConcreteProductA1 implements ProductA {
+    public void use() {
+        System.out.println("Using Product A1");
+    }
+}
+
+// ConcreteProductA2
+class ConcreteProductA2 implements ProductA {
+    public void use() {
+        System.out.println("Using Product A2");
+    }
+}
+
+// ConcreteProductB1
+class ConcreteProductB1 implements ProductB {
+    public void use() {
+        System.out.println("Using Product B1");
+    }
+}
+
+// ConcreteProductB2
+class ConcreteProductB2 implements ProductB {
+    public void use() {
+        System.out.println("Using Product B2");
+    }
+}
+
+// AbstractFactory
+interface AbstractFactory {
+    ProductA createProductA();
+    ProductB createProductB();
+}
+
+// ConcreteFactory1
+class ConcreteFactory1 implements AbstractFactory {
+    public ProductA createProductA() {
+        return new ConcreteProductA1();
+    }
+
+    public ProductB createProductB() {
+        return new ConcreteProductB1();
+    }
+}
+
+// ConcreteFactory2
+class ConcreteFactory2 implements AbstractFactory {
+    public ProductA createProductA() {
+        return new ConcreteProductA2();
+    }
+
+    public ProductB createProductB() {
+        return new ConcreteProductB2();
+    }
+}
+
+// Client Code
+public class AbstractFactoryExample {
+    public static void main(String[] args) {
+        AbstractFactory factory1 = new ConcreteFactory1();
+        ProductA productA1 = factory1.createProductA();
+        ProductB productB1 = factory1.createProductB();
+        productA1.use(); // Outputs: Using Product A1
+        productB1.use(); // Outputs: Using Product B1
+
+        AbstractFactory factory2 = new ConcreteFactory2();
+        ProductA productA2 = factory2.createProductA();
+        ProductB productB2 = factory2.createProductB();
+        productA2.use(); // Outputs: Using Product A2
+        productB2.use(); // Outputs: Using Product B2
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Encapsulation of object creation**: Clients don’t need to know the details of how objects are created or how they are composed.
+  - **Consistency among products**: Ensures that products from the same family are compatible and can be used together seamlessly.
+  - **Easier to introduce new products**: Adding new concrete factories for new product families does not affect existing code.
+
+- **Negative**:
+  - **Increased complexity**: The system can become overly complex with multiple interfaces and classes, making it harder to understand.
+  - **Difficulties in extending the pattern**: If there are many variations of products, extending the abstract factory to accommodate new product variations may require significant changes.
+  - **Potential for code bloat**: If many product families are required, it may lead to a proliferation of classes and interfaces.
+
 
 5. **Builder Pattern**:
    - Constructs complex objects step by step.

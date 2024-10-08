@@ -14,10 +14,85 @@
 3. **Behavioral Patterns**: Handle communication between objects.
 
 ## Creational Design Patterns
+### **Singleton Design Pattern**
 
-1. **Singleton Pattern**:
-   - Ensures a class has only one instance and provides global access to it.
-   - **Example**: Database connections where only one connection object is required.
+#### **Definition:**
+The Singleton Pattern ensures that a class has only one instance and provides a global point of access to that instance. This pattern restricts the instantiation of a class to one object and is often used when exactly one object is needed to coordinate actions across a system.
+
+#### **Problem:**
+Use the Singleton Pattern when:
+- You need exactly one instance of a class to control a critical resource or manage system-wide coordination.
+- You want to prevent multiple instances of a class from being created (e.g., logging services, configuration managers, or connection pools).
+
+#### **Solution:**
+The Singleton Pattern ensures that only one instance of the class is created by:
+1. Making the constructor private so the class cannot be instantiated from outside.
+2. Creating a static method that returns the sole instance of the class.
+3. Storing the single instance of the class as a static member.
+
+**Class Structure**:
+- **Singleton**: The class itself, which ensures only one instance exists and provides a method to retrieve that instance.
+
+**UML Structure**:
+```
++--------------+
+|  Singleton   |
++--------------+
+| -instance    |
+| +getInstance()|
++--------------+
+```
+
+#### **Example Code:**
+Here’s a simple example in Java:
+
+```java
+// Singleton class
+class Singleton {
+    // Static variable to hold the single instance
+    private static Singleton instance;
+
+    // Private constructor to prevent instantiation
+    private Singleton() {
+        // Initialization code (if any)
+    }
+
+    // Static method to return the single instance
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+
+    public void showMessage() {
+        System.out.println("Singleton Instance: Hello World!");
+    }
+}
+
+// Usage
+public class SingletonPatternExample {
+    public static void main(String[] args) {
+        // Get the only instance of Singleton
+        Singleton singleton = Singleton.getInstance();
+
+        // Show a message from the singleton instance
+        singleton.showMessage();
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Controlled access to the sole instance**: Only one instance of the class is created, ensuring controlled access to critical resources (e.g., configurations, logging).
+  - **Global point of access**: The single instance is accessible globally, making it easier to manage.
+  - **Lazy instantiation**: The Singleton can be initialized only when it is first requested, which may improve resource efficiency.
+
+- **Negative**:
+  - **Difficult to test**: Singleton classes can be hard to test in isolation, especially in multithreaded environments, because they introduce a global state.
+  - **Potential for misuse**: Singleton can be overused and lead to a tightly coupled system, especially when developers use it as a global variable.
+  - **Thread safety concerns**: In multithreaded scenarios, careful handling (e.g., using synchronization or double-checked locking) is required to ensure that only one instance is created.
 
 2. **Factory Method Pattern**:
    - Defines an interface for creating objects, but lets subclasses decide which class to instantiate.

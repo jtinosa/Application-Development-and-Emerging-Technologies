@@ -581,9 +581,112 @@ public class BuilderPatternExample {
 
 ## Structural Design Patterns
 
-1. **Adapter Pattern**:
-   - Converts one interface into another, making incompatible interfaces work together.
-   - **Example**: Adapting XML data to work with a JSON-based library.
+### **Adapter Design Pattern**
+
+#### **Definition:**
+The Adapter Pattern is a structural design pattern that allows incompatible interfaces to work together. It acts as a bridge between two incompatible interfaces, enabling them to communicate and function as if they were compatible. This pattern is useful when you want to use an existing class but its interface does not match the one you need.
+
+#### **Problem:**
+Use the Adapter Pattern when:
+- You want to integrate a class from a library or framework that does not match the interface you need.
+- You want to use multiple classes with different interfaces interchangeably.
+- You need to adapt an interface to match a specific client without modifying the existing code.
+
+#### **Solution:**
+The Adapter Pattern consists of:
+1. **Target**: The interface that clients use.
+2. **Adapter**: The class that implements the target interface and translates calls to the adaptee.
+3. **Adaptee**: The existing class with an incompatible interface that needs adapting.
+4. **Client**: The code that interacts with the target interface.
+
+**Class Structure**:
+- **Target**: Defines the domain-specific interface that the client uses.
+- **Adapter**: Implements the target interface and adapts the adaptee interface to it.
+- **Adaptee**: Contains the existing functionality that needs to be adapted.
+
+**UML Structure**:
+```
++-------------------+
+|      Client       |
++-------------------+
+|                   |
++-------------------+
+        |
+        v
++-------------------+
+|      Target       |
++-------------------+
+| +request()        |
++-------------------+
+        ^
+        |
++-------------------+
+|      Adapter      |
++-------------------+
+| -adaptee         |
+| +request()       |
++-------------------+
+        |
+        v
++-------------------+
+|     Adaptee       |
++-------------------+
+| +specificRequest()|
++-------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Target Interface
+interface Target {
+    void request();
+}
+
+// Adaptee Class
+class Adaptee {
+    public void specificRequest() {
+        System.out.println("Called specificRequest from Adaptee.");
+    }
+}
+
+// Adapter Class
+class Adapter implements Target {
+    private Adaptee adaptee;
+
+    public Adapter(Adaptee adaptee) {
+        this.adaptee = adaptee;
+    }
+
+    @Override
+    public void request() {
+        System.out.println("Adapter converts the request.");
+        adaptee.specificRequest();
+    }
+}
+
+// Client Code
+public class AdapterPatternExample {
+    public static void main(String[] args) {
+        Adaptee adaptee = new Adaptee();
+        Target target = new Adapter(adaptee);
+        target.request();  // Outputs: Adapter converts the request. Called specificRequest from Adaptee.
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Increased flexibility**: It allows for the integration of new classes into existing systems without modifying the existing code.
+  - **Code reusability**: Enables the reuse of existing code that has an incompatible interface.
+  - **Decoupling**: Reduces dependencies between classes, making the codebase easier to manage and extend.
+
+- **Negative**:
+  - **Complexity**: It can add an extra layer of abstraction, which may complicate the code structure.
+  - **Overhead**: If overused, it can lead to increased complexity and maintenance challenges.
+
 
 2. **Bridge Pattern**:
    - Separates abstraction from implementation, allowing both to vary independently.

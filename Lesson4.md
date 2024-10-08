@@ -1180,9 +1180,124 @@ public class FacadePatternExample {
   - **Potential for Over-Simplification**: The facade might become too simplistic, potentially hiding useful functionality in the subsystem that clients may need.
   - **Single Point of Failure**: If the facade class changes or fails, it can impact all clients that rely on it, potentially leading to a lack of flexibility.
 
-6. **Flyweight Pattern**:
-   - Reduces memory usage by sharing common data between objects.
-   - **Example**: Multiple bullets in a game sharing the same attributes.
+### **Flyweight Design Pattern**
+
+#### **Definition:**
+The Flyweight Pattern is a structural design pattern that reduces the memory usage of an application by sharing common parts of state between multiple objects. It is used to optimize the use of memory in situations where a large number of similar objects are created, allowing for a more efficient use of resources.
+
+#### **Problem:**
+Use the Flyweight Pattern when:
+- You need to create a large number of objects that share similar state or behavior.
+- The overhead of storing these objects individually would consume too much memory.
+- You want to minimize the memory footprint of your application while maintaining performance.
+
+#### **Solution:**
+The Flyweight Pattern consists of:
+1. **Flyweight**: An interface or abstract class that defines the common interface for all shared objects.
+2. **ConcreteFlyweight**: A class that implements the Flyweight interface and holds the intrinsic state (shared state) of the objects.
+3. **FlyweightFactory**: A class responsible for creating and managing the Flyweight objects, ensuring that they are shared appropriately.
+4. **Client**: The code that uses the Flyweight objects, providing the extrinsic state (non-shared state) as needed.
+
+**Class Structure**:
+- **Flyweight**: Interface for shared objects.
+- **ConcreteFlyweight**: Implements the Flyweight interface.
+- **FlyweightFactory**: Manages Flyweight instances.
+
+**UML Structure**:
+```
++------------------+
+|     Flyweight     |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteFlyweight |
++------------------+
+| +operation()     |
++------------------+
+        ^
+        |
++------------------+
+| FlyweightFactory  |
++------------------+
+| +getFlyweight()   |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+// Flyweight Interface
+interface TreeType {
+    void display(int x, int y);
+}
+
+// ConcreteFlyweight Class
+class Tree implements TreeType {
+    private String name;
+    private String color;
+
+    public Tree(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
+    @Override
+    public void display(int x, int y) {
+        System.out.println("Tree: " + name + ", Color: " + color + " at (" + x + ", " + y + ")");
+    }
+}
+
+// FlyweightFactory Class
+class TreeFactory {
+    private Map<String, TreeType> trees = new HashMap<>();
+
+    public TreeType getTree(String name, String color) {
+        String key = name + "-" + color;
+        if (!trees.containsKey(key)) {
+            trees.put(key, new Tree(name, color));
+        }
+        return trees.get(key);
+    }
+}
+
+// Client Code
+public class FlyweightPatternExample {
+    public static void main(String[] args) {
+        TreeFactory treeFactory = new TreeFactory();
+
+        TreeType tree1 = treeFactory.getTree("Oak", "Green");
+        tree1.display(1, 2);
+
+        TreeType tree2 = treeFactory.getTree("Pine", "Dark Green");
+        tree2.display(3, 4);
+
+        TreeType tree3 = treeFactory.getTree("Oak", "Green");
+        tree3.display(5, 6); // Reuses the Oak tree object
+
+        // Check if the same object is reused
+        System.out.println("Are tree1 and tree3 the same object? " + (tree1 == tree3));
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Memory Efficiency**: Significantly reduces memory usage by sharing common states among objects.
+  - **Performance Improvement**: Faster creation of objects by reusing existing instances.
+  - **Flexibility**: You can easily add new flyweight objects without affecting the existing system.
+
+- **Negative**:
+  - **Complexity**: Increases system complexity, as it requires careful management of shared and non-shared states.
+  - **Difficulty in Maintenance**: The shared state can make it more challenging to understand the behavior of individual objects, especially if there are many variations of the shared state.
+
 
 7. **Proxy Pattern**:
    - Provides a placeholder for another object to control access to it.

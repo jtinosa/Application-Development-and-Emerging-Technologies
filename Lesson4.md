@@ -1835,3 +1835,4 @@ public class StrategyPatternExample {
   - **Increased Number of Classes**: Each strategy requires a separate class, which can lead to an increased number of classes in the system.
   - **Client Awareness**: Clients must be aware of different strategies and their contexts to utilize them effectively, which can complicate usage.
   - **Performance Overhead**: The additional layer of abstraction may introduce slight performance overhead due to delegation.
+

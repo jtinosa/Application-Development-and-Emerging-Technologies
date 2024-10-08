@@ -1561,10 +1561,156 @@ public class IteratorPatternExample {
   - **Complexity**: Introduces additional classes and interfaces, which can complicate the design.
   - **Performance Overhead**: The iteration may incur some performance overhead, especially if there are many levels of indirection.
 
+### **Observer Design Pattern**
 
-2. **Observer Pattern**:
-   - Notifies multiple objects about changes to a subject.
-   - **Example**: A store notifying customers about new product arrivals.
+#### **Definition:**
+The Observer Pattern is a behavioral design pattern that defines a one-to-many dependency between objects, allowing multiple observers to be notified and updated automatically when the state of a subject changes. This pattern promotes loose coupling and dynamic interaction between components.
+
+#### **Problem:**
+Use the Observer Pattern when:
+- You need to create a subscription mechanism to allow multiple objects to react to changes in another object’s state.
+- You want to minimize the coupling between the subject and its observers, allowing for more flexible and maintainable code.
+- You have a scenario where the state change of one object needs to be reflected in multiple dependent objects.
+
+#### **Solution:**
+The Observer Pattern consists of:
+1. **Subject**: An interface or abstract class that defines methods for attaching, detaching, and notifying observers.
+2. **ConcreteSubject**: A class that implements the Subject interface and maintains a list of observers, notifying them of state changes.
+3. **Observer**: An interface that defines a method for updating the observer when the subject's state changes.
+4. **ConcreteObserver**: A class that implements the Observer interface and updates its state based on changes in the subject.
+
+**Class Structure**:
+- **Subject**: The interface for managing observers.
+- **ConcreteSubject**: Implements the Subject interface and maintains observer references.
+- **Observer**: The interface for observers to implement.
+- **ConcreteObserver**: Implements the Observer interface.
+
+**UML Structure**:
+```
++------------------+
+|     Subject      |
++------------------+
+| +attach()        |
+| +detach()        |
+| +notify()        |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteSubject   |
++------------------+
+| -observers       |
+| +notify()        |
++------------------+
+        ^
+        |
++------------------+
+|     Observer     |
++------------------+
+| +update()        |
++------------------+
+        ^
+        |
++------------------+
+| ConcreteObserver  |
++------------------+
+| +update()        |
++------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Subject Interface
+interface Subject {
+    void attach(Observer observer);
+    void detach(Observer observer);
+    void notifyObservers();
+}
+
+// Concrete Subject Class
+class ConcreteSubject implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+    private String state;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+        notifyObservers();
+    }
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
+}
+
+// Observer Interface
+interface Observer {
+    void update();
+}
+
+// Concrete Observer Class
+class ConcreteObserver implements Observer {
+    private String name;
+    private ConcreteSubject subject;
+
+    public ConcreteObserver(String name, ConcreteSubject subject) {
+        this.name = name;
+        this.subject = subject;
+        this.subject.attach(this);
+    }
+
+    @Override
+    public void update() {
+        System.out.println(name + " received update: " + subject.getState());
+    }
+}
+
+// Client Code
+public class ObserverPatternExample {
+    public static void main(String[] args) {
+        ConcreteSubject subject = new ConcreteSubject();
+
+        ConcreteObserver observer1 = new ConcreteObserver("Observer 1", subject);
+        ConcreteObserver observer2 = new ConcreteObserver("Observer 2", subject);
+
+        subject.setState("State 1");
+        subject.setState("State 2");
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Loose Coupling**: Promotes a low-coupling design, allowing subjects and observers to interact with minimal knowledge of each other.
+  - **Dynamic Relationships**: Allows for dynamic addition or removal of observers at runtime.
+  - **Separation of Concerns**: Separates the subject's state management from the observer's response logic, improving code organization.
+
+- **Negative**:
+  - **Memory Leaks**: If observers are not properly detached, they can lead to memory leaks, as the subject may hold references to them.
+  - **Complexity**: The more observers you have, the more complex the notification mechanism can become, making it harder to debug.
+  - **Performance Overhead**: In scenarios with many observers, frequent state changes can lead to performance issues due to the overhead of notifying all observers.
 
 3. **Strategy Pattern**:
    - Defines a family of algorithms and allows them to be interchangeable.

@@ -203,10 +203,99 @@ public class FactoryMethodExample {
   - **Increased complexity**: For simple applications, using a factory method might add unnecessary complexity as you have to introduce additional classes and interfaces.
   - **Multiple subclasses**: Overuse can lead to a proliferation of subclasses and make the code harder to maintain.
 
+### **Prototype Design Pattern**
 
-3. **Prototype Pattern**:
-   - Allows copying an object without depending on its class.
-   - **Example**: Cloning an object without knowing its specific class.
+#### **Definition:**
+The Prototype Pattern is a creational design pattern that allows an object to create a copy of itself, known as a prototype. This pattern is used when the cost of creating a new instance of an object is more expensive than copying an existing instance. It provides a way to create new objects by copying an existing object, thus facilitating object creation without coupling to specific classes.
+
+#### **Problem:**
+Use the Prototype Pattern when:
+- You want to avoid the overhead of creating an object from scratch, especially when the object is complex.
+- You need to create an object dynamically at runtime based on an existing object.
+- You want to share an object that serves as a template for other objects, allowing new instances to be created with similar properties.
+
+#### **Solution:**
+The Prototype Pattern involves:
+1. **Prototype Interface**: Declares the cloning method.
+2. **ConcretePrototype**: Implements the prototype interface and provides the actual cloning functionality.
+3. **Client**: Uses the prototype to create new instances without knowing their concrete classes.
+
+**Class Structure**:
+- **Prototype**: Interface or abstract class with a method for cloning.
+- **ConcretePrototype**: Concrete classes that implement the prototype interface.
+- **Client**: The class that uses the prototype to create new objects.
+
+**UML Structure**:
+```
++-------------------+
+|     Prototype     |
++-------------------+
+| +clone()          |
++-------------------+
+        ^
+        |
++-------------------+
+| ConcretePrototype  |
++-------------------+
+| +clone()          |
++-------------------+
+```
+
+#### **Example Code:**
+Here’s an example in Java:
+
+```java
+// Prototype Interface
+interface Prototype {
+    Prototype clone();
+}
+
+// ConcretePrototype Class
+class ConcretePrototype implements Prototype {
+    private String property;
+
+    public ConcretePrototype(String property) {
+        this.property = property;
+    }
+
+    // Implementing the clone method
+    @Override
+    public Prototype clone() {
+        return new ConcretePrototype(this.property);
+    }
+
+    public String getProperty() {
+        return property;
+    }
+}
+
+// Client Code
+public class PrototypePatternExample {
+    public static void main(String[] args) {
+        // Create a new ConcretePrototype instance
+        ConcretePrototype original = new ConcretePrototype("Original Property");
+
+        // Clone the original object
+        ConcretePrototype clone = (ConcretePrototype) original.clone();
+
+        // Display properties
+        System.out.println("Original: " + original.getProperty()); // Outputs: Original: Original Property
+        System.out.println("Clone: " + clone.getProperty());       // Outputs: Clone: Original Property
+    }
+}
+```
+
+#### **Consequences:**
+
+- **Positive**:
+  - **Dynamic object creation**: New objects can be created at runtime without specifying their concrete class.
+  - **Reduced subclassing**: It helps in avoiding class proliferation, as new objects can be created from existing ones.
+  - **Flexibility**: The prototype can be modified, and clones can have different configurations or states.
+
+- **Negative**:
+  - **Complexity**: Implementing the cloning logic may add complexity to the codebase, especially if the objects have deep hierarchies or contain mutable fields.
+  - **Inconsistency**: If the prototype isn't properly designed, it can lead to inconsistencies between the prototype and its clones, especially if they share mutable states.
+  - **Performance overhead**: Cloning large objects can still incur performance costs, particularly if they contain significant amounts of data.
 
 4. **Abstract Factory Pattern**:
    - Produces families of related objects without specifying concrete classes.
